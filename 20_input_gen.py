@@ -39,7 +39,7 @@ maindict = {}
 for i in range(0, 20):
 	for j in range(i + 1, 20): 
 		if str([i, j]) not in groupdict.keys():
-			stress = "{:.2f}".format((4 + random.uniform(-2, 2)))
+			stress = "{:.2f}".format((3 + random.normalvariate(0, 0.7)))
 			happiness = "{:.2f}".format(5 + random.uniform(-2, 2))
 			maindict[str([i, j])] = str([happiness, stress])
 		else: 
