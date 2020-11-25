@@ -1,4 +1,4 @@
-import random
+import random, math
 
 groups = [[1, 3, 7], [0, 2, 9], [4, 5, 6, 8]]
 groupdict = {}
@@ -16,12 +16,31 @@ for key, value in groupdict.items():
 	print(key, ' : ', value)
 """
 
+biggest = max([i for i in range(len(groups))], key=(lambda i: len(groups[i])))
+
+print(biggest)
+
+net_stress = 0
+for i in groups[biggest]:
+	for j in groups[biggest]:
+		if i < j:
+			myStr = groupdict[str([i, j])]
+			myStr = myStr.replace(']', ' ')
+			myStr = myStr.replace('[', ' ')
+			myStr = myStr.replace(',', ' ')
+			myStr = myStr.replace('\'', ' ')
+			print(myStr)
+			net_stress = net_stress + float(myStr.split()[1])
+
+print(net_stress, net_stress * len(groups))
+
 maindict = {}
+
 
 for i in range(0, 10):
 	for j in range(i + 1, 10): 
 		if str([i, j]) not in groupdict.keys():
-			stress = "{:.2f}".format((20 + random.uniform(-4, 4)))
+			stress = "{:.2f}".format((4 + random.uniform(-2, 2)))
 			happiness = "{:.2f}".format(5 + random.uniform(-2, 2))
 			maindict[str([i, j])] = str([happiness, stress])
 		else: 
@@ -42,7 +61,8 @@ for key, value in maindict.items():
 	# print([i for i in vals])
 
 inp = open('generated/10.in', 'w')
-inp.write("10")
+inp.write("10\n")
+inp.write(str(math.ceil(net_stress) * len(groups)) + "\n")
 
 for key, value in maindict.items():
 	myStr = key + value
