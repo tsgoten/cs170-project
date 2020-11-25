@@ -15,7 +15,7 @@ else:
 for group in groups: 
 	for i in range(len(group)):
 		for j in range(i + 1, len(group)): 
-			stress = "{:.2f}".format((0.3 + random.uniform(-0.3, 0.3)))
+			stress = "{:.2f}".format((0.25 + random.uniform(-0.25, 0.25)))
 			happiness = "{:.2f}".format(20 + random.uniform(-10, 10))
 			#print(str(group[i]) + " " + str(group[j]) + " " + stress + " " + happiness)
 			groupdict[str([group[i], group[j]])] = str([happiness, stress])
@@ -32,7 +32,7 @@ maindict = {}
 for i in range(0, 50):
 	for j in range(i + 1, 50): 
 		if str([i, j]) not in groupdict.keys():
-			stress = "{:.2f}".format((2 + random.uniform(-1.5, 1.5)))
+			stress = "{:.2f}".format((4 + random.uniform(-2, 4)))
 			happiness = "{:.2f}".format(5 + random.uniform(-2, 2))
 			maindict[str([i, j])] = str([happiness, stress])
 		# elif str([i, j]) in groupdict.keys(): 
