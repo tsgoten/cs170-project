@@ -9,7 +9,7 @@ for group in groups:
 			stress = "{:.2f}".format((1 + random.uniform(-1, 1)))
 			happiness = "{:.2f}".format(20 + random.uniform(-10, 10))
 			#print(str(group[i]) + " " + str(group[j]) + " " + stress + " " + happiness)
-			groupdict[str([group[i], group[j]])] = str([stress, happiness])
+			groupdict[str([group[i], group[j]])] = str([happiness, stress])
 
 """
 for key, value in groupdict.items():
@@ -23,7 +23,7 @@ for i in range(0, 20):
 		if str([i, j]) not in groupdict.keys():
 			stress = "{:.2f}".format((20 + random.uniform(-4, 4)))
 			happiness = "{:.2f}".format(5 + random.uniform(-2, 2))
-			maindict[str([i, j])] = str([stress, happiness])
+			maindict[str([i, j])] = str([happiness, stress])
 		else: 
 			maindict[str([i, j])] = groupdict[str([i, j])]
 
@@ -42,6 +42,7 @@ for key, value in maindict.items():
 	# print([i for i in vals])
 
 inp = open('generated/20.in', 'w')
+inp.write("20")
 
 for key, value in maindict.items():
 	myStr = key + value
