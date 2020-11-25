@@ -40,6 +40,12 @@ for i in range(0, 50):
 
 
 # String Output 
+for key, value in maindict.items():
+	total = key + value
+	vals = [s for s in total.split() if s.isdigit() or s == '.']
+	
+	# print([i for i in vals])
+inp = open('generated/50.in', 'w')
 
 for key, value in maindict.items():
 	myStr = key + value
@@ -49,7 +55,30 @@ for key, value in maindict.items():
 	myStr = myStr.replace('\'', ' ')
 	# print(myStr)
 	vals = [s for s in myStr.split() if s.replace('.', '').isdigit()]
-	print(vals[0] + ' ' + vals[1] + ' ' + vals[2] + ' ' + vals[3])
+	inp.write(vals[0] + ' ' + vals[1] + ' ' + vals[2] + ' ' + vals[3] + '\n')
+inp.close
+
+out = open('generated/50.out', 'w')
+
+assignment = []
+
+for i in range(50):
+	for j in range(len(groups)):
+		if i in groups[j]:
+			assignment.append(str(i) + ' ' + str(j))
+
+for a in assignment:
+	out.write(a + '\n')
+
+
+# for i in range(len(groups)):
+# 	for j in groups[i]:
+# 		assignment.append(str(j) + ' ' + str(i))
+
+# assignment.sort()
+print(assignment)
+
+out.close
 
 
 print(len(maindict))
