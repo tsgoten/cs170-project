@@ -38,17 +38,19 @@ for i in range(0, 50):
 		else: 
 			maindict[str([i, j])] = groupdict[str([i, j])]
 
-"""
-"[41, 44]"  :  "['16.18', '3.98']"
 
-41 44 16.18 3.98
-
-"""
+# String Output 
 
 for key, value in maindict.items():
-	total = key + value
-	vals = [s for s in total.split() if s.isdigit() or s == '.']
-	print([i for i in vals])
+	myStr = key + value
+	myStr = myStr.replace(']', ' ')
+	myStr = myStr.replace('[', ' ')
+	myStr = myStr.replace(',', ' ')
+	myStr = myStr.replace('\'', ' ')
+	# print(myStr)
+	vals = [s for s in myStr.split() if s.replace('.', '').isdigit()]
+	print(vals[0] + ' ' + vals[1] + ' ' + vals[2] + ' ' + vals[3])
+
 
 print(len(maindict))
 
