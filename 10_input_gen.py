@@ -1,6 +1,6 @@
 import random
 
-groups = [[1, 2, 5, 9], [0, 3, 10, 14, 19], [4, 7, 8, 11, 12, 13, 15, 17, 18], [6, 16]]
+groups = [[1, 3, 7], [0, 2, 9], [4, 5, 6, 8]]
 groupdict = {}
 
 for group in groups: 
@@ -18,8 +18,8 @@ for key, value in groupdict.items():
 
 maindict = {}
 
-for i in range(0, 20):
-	for j in range(i + 1, 20): 
+for i in range(0, 10):
+	for j in range(i + 1, 10): 
 		if str([i, j]) not in groupdict.keys():
 			stress = "{:.2f}".format((20 + random.uniform(-4, 4)))
 			happiness = "{:.2f}".format(5 + random.uniform(-2, 2))
