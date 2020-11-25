@@ -45,6 +45,7 @@ for key, value in maindict.items():
 	vals = [s for s in total.split() if s.isdigit() or s == '.']
 	
 	# print([i for i in vals])
+
 inp = open('generated/50.in', 'w')
 
 for key, value in maindict.items():
