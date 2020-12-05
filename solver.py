@@ -52,10 +52,15 @@ def solve(G, s):
                 student_to_room[student] = new_room
                 curr_happiness = calculate_happiness(student_to_room, G)
 
-                if calculate_stress_for_room(room_to_student[new_room], G) > s / len(room_to_student):
+                new_room_stress = calculate_stress_for_room(room_to_student[new_room], G)
+                stress_budget_room = s / len(room_to_student)
+                print('Room stress: ', new_room_stress, '\t\t\tRoom Budget: ', stress_budget_room, 'Num of rooms: ', len(room_to_student))
+                if new_room_stress > stress_budget_room:
+                    print('Room stress: ', new_room_stress, '\t\t\tRoom Budget: ', stress_budget_room, 'Num of rooms: ', len(room_to_student))
                     break
 
                 if curr_happiness > max_happiness:
+                    print(student, new_room)
                     max_happiness = curr_happiness
                     is_changed = 1
                     best_move = new_room
