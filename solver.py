@@ -37,16 +37,19 @@ def solve(G, s):
         # Iterate through every vertex to see if it is more optimal to be in another breakout room
         for student in list(G.nodes):
             curr_room = student_to_room[student]
+            # Consider if the number of room changes by moving the current student
             num_rooms = len(room_to_student)
             if len(room_to_student[student_to_room[student]]) == 1:
                 num_rooms -= 1
 
             # Iterate through every breakout room to see whether the student fits in this room
             for new_room in room_to_student.keys():
+            # for new_room in range(10):
                 # Remove breakout room if nobody is inside it
-                if len(room_to_student[new_room]) == 0:
-                    room_to_student.pop(new_room)
-                    break
+                # print('student: ', student, 'room: ', new_room, room_to_student.keys())
+                # if len(room_to_student[new_room]) == 0:
+                #     room_to_student.pop(new_room)
+                #     break
 
                 # Remove student from old breakout room
                 room_to_student[curr_room].remove(student)
@@ -58,16 +61,13 @@ def solve(G, s):
 
                 new_room_stress = calculate_stress_for_room(room_to_student[new_room], G)
                 stress_budget_room = s / num_rooms
-                # print('Room stress: ', new_room_stress, '\t\t\tRoom Budget: ', stress_budget_room, 'Num of rooms: ', len(room_to_student))
                 if new_room_stress > stress_budget_room:
-                    # print('Room stress: ', new_room_stress, '\t\t\tRoom Budget: ', stress_budget_room, 'Num of rooms: ', len(room_to_student))
-                    room_to_student[new_room].remove(student)
-                    room_to_student[curr_room].append(student)
-                    student_to_room[student] = curr_room
-                    break
+                    # room_to_student[new_room].remove(student)
+                    # room_to_student[curr_room].append(student)
+                    # student_to_room[student] = curr_room
+                    curr_happiness = 0
 
                 if curr_happiness > max_happiness:
-                    print(student, new_room)
                     max_happiness = curr_happiness
                     is_changed = 1
                     best_move = new_room
@@ -90,7 +90,18 @@ def solve(G, s):
             room_to_student[best_move].append(best_student)
             student_to_room[best_student] = best_move
 
-    return student_to_room, len(student_to_room)
+        rooms = list(room_to_student.keys())
+        for r in rooms:
+            if len(room_to_student[r]) == 0:
+                room_to_student.pop(r)
+    
+    index = 0
+    output = {}
+    for r in room_to_student.keys():
+        output[index] = room_to_student[r]
+        index += 1
+
+    return convert_dictionary(output), len(output)
 
 
 # Here's an example of how to run your solver.
