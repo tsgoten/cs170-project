@@ -37,6 +37,10 @@ def solve(G, s):
         # Iterate through every vertex to see if it is more optimal to be in another breakout room
         for student in list(G.nodes):
             curr_room = student_to_room[student]
+            num_rooms = len(room_to_student)
+            if len(room_to_student[student_to_room[student]]) == 1:
+                num_rooms -= 1
+
             # Iterate through every breakout room to see whether the student fits in this room
             for new_room in room_to_student.keys():
                 # Remove breakout room if nobody is inside it
@@ -53,10 +57,13 @@ def solve(G, s):
                 curr_happiness = calculate_happiness(student_to_room, G)
 
                 new_room_stress = calculate_stress_for_room(room_to_student[new_room], G)
-                stress_budget_room = s / len(room_to_student)
-                print('Room stress: ', new_room_stress, '\t\t\tRoom Budget: ', stress_budget_room, 'Num of rooms: ', len(room_to_student))
+                stress_budget_room = s / num_rooms
+                # print('Room stress: ', new_room_stress, '\t\t\tRoom Budget: ', stress_budget_room, 'Num of rooms: ', len(room_to_student))
                 if new_room_stress > stress_budget_room:
-                    print('Room stress: ', new_room_stress, '\t\t\tRoom Budget: ', stress_budget_room, 'Num of rooms: ', len(room_to_student))
+                    # print('Room stress: ', new_room_stress, '\t\t\tRoom Budget: ', stress_budget_room, 'Num of rooms: ', len(room_to_student))
+                    room_to_student[new_room].remove(student)
+                    room_to_student[curr_room].append(student)
+                    student_to_room[student] = curr_room
                     break
 
                 if curr_happiness > max_happiness:
@@ -72,6 +79,7 @@ def solve(G, s):
                 room_to_student[new_room].remove(student)
                 room_to_student[curr_room].append(student)
                 student_to_room[student] = curr_room
+            
 
         # Remove best student from current breakout room
         # Add best student to best breakout room
