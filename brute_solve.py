@@ -30,11 +30,11 @@ def solve(G, s):
                 max_happiness = calculate_happiness(ret_map, G)
         return max_map
             
-    for size in range(2, 4):
+    for size in range(4, 6):
         result = get_mapping(size, dict())
         if result:
             return result, size
-    print('No result found!')
+    # print('No result found!')
     return None
     # return result, 2
 
@@ -67,3 +67,6 @@ if __name__ == '__main__':
             cost_t = calculate_happiness(D, G)
             print(output_path, cost_t)
             write_output_file(D, output_path)
+        else:
+            print(output_path, 'No Result Found!')
+
