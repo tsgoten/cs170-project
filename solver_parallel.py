@@ -123,19 +123,6 @@ if __name__ == '__main__':
 
 
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
-<<<<<<< HEAD
-# if __name__ == '__main__':
-#     inputs = glob.glob('inputs_parallel/*')
-#     inputs = inputs[::-1]
-#     for input_path in inputs:
-#         output_path = 'outputs_parallel/' + basename(normpath(input_path))[:-3] + '.out'
-#         if not os.path.exists(output_path):
-#             G, s = read_input_file(input_path, 100)
-#             D, k = solve(G, s)
-#             assert is_valid_solution(D, G, s, k)
-#             cost_t = calculate_happiness(D, G)
-#             write_output_file(D, output_path)
-=======
 if __name__ == '__main__':
     inputs = glob.glob('inputs_parallel/parallel1/*')
     for input_path in inputs:
@@ -146,4 +133,3 @@ if __name__ == '__main__':
             assert is_valid_solution(D, G, s, k)
             cost_t = calculate_happiness(D, G)
             write_output_file(D, output_path)
->>>>>>> SwapImplementation
