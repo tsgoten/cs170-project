@@ -30,10 +30,11 @@ def solve(G, s):
                 max_happiness = calculate_happiness(ret_map, G)
         return max_map
             
-    for size in range(4, 6):
-        result = get_mapping(size, dict())
-        if result:
-            return result, size
+    # for size in range(4, 5):
+    size = 4
+    result = get_mapping(size, dict())
+    if result:
+        return result, size
     # print('No result found!')
     return None
     # return result, 2
@@ -55,8 +56,8 @@ def solve(G, s):
 
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
 if __name__ == '__main__':
-    inputs = glob.glob('smalls/*')
-    inputs = inputs[::-1]
+    inputs = sorted(glob.glob('smalls/*'))[::-1]
+    # inputs = inputs.sort()
     for input_path in inputs:
         output_path = 'smalls_outputs/' + basename(normpath(input_path))[:-3] + '.out'
         G, s = read_input_file(input_path, 100)
