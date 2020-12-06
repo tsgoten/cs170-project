@@ -81,7 +81,7 @@ def read_output_file(path, G, s):
 
     :param path: str, a path
     :param G: the input graph corresponding to this output
-    :return: networkx Graph is the output is well formed, AssertionError thrown otherwise
+    :return: assignment dictionary the output is well formed, AssertionError thrown otherwise
     """
     with open(path, "r") as fo:
         nodes = set()
