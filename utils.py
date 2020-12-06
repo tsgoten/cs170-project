@@ -21,7 +21,6 @@ def is_valid_solution(D, G, s, rooms):
     for k, v in room_to_student.items():
         print('room: ', v)
         room_stress = calculate_stress_for_room(v, G)
-        print(room_stress)
         if room_stress > room_budget:
             # print(room_stress, 'This was too much')
             return False
