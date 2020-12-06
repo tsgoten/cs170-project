@@ -1,5 +1,5 @@
 .vscode
 generated
 __pycache__
-inputs_parallel
 outputs
+inputs
