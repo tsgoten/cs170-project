@@ -13,7 +13,7 @@ def is_valid_solution(D, G, s, rooms):
         bool: whether D is a valid solution
     """
     room_budget = s/rooms
-    print('Budget', room_budget)
+    # print('Budget', room_budget)
     room_to_student = {}
     for k, v in D.items():
         room_to_student.setdefault(v, []).append(k)
@@ -22,7 +22,7 @@ def is_valid_solution(D, G, s, rooms):
         # print('room: ', v)
         room_stress = calculate_stress_for_room(v, G)
         if room_stress > room_budget:
-            print(room_stress, 'This was too much')
+            # print(room_stress, 'This was too much')
             return False
         # else:
             # print(room_stress)
