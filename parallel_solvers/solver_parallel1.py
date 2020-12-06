@@ -123,7 +123,7 @@ def solve(G, s):
 
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
 if __name__ == '__main__':
-    inputs = glob.glob('inputs_parallel/parallel1/*')
+    inputs = glob.glob('parallel1/*')
     for input_path in inputs:
         output_path = 'outputs_parallel/' + basename(normpath(input_path))[:-3] + '.out'
         if not os.path.exists(output_path):
