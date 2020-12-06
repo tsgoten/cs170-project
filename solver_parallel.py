@@ -21,6 +21,7 @@ def solve(G, s):
     student_to_room = {}
 
     # Put people into their own breakout room
+    print(list(G.nodes))
     for node in list(G.nodes):
         room_to_student[node] = [node]
         student_to_room[node] = node
