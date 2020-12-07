@@ -124,20 +124,20 @@ def solve(G, s, output_file=''):
             elif add_hap > 0 and r < math.exp(-delta/T):
                 add_student(n1, room)
         print('Original Stress: ', s)
-        original_s = s
-        s = 2 * s
+        # original_s = s
+        # s = 2 * s
         for countdown in range(100, 0, -1):
             curr, curr_rooms = get_happiness(), len(room_to_student)
             # print(curr, 'Stress: ', s, 'Rooms: ', curr_rooms)
             if curr > new_high:                    
                 new_high, best_D, best_k = curr, D.copy(), curr
-            if s > original_s:
-                s -= s/50
-            else:
-                s = original_s
+            # if s > original_s:
+            #     s -= s/50
+            # else:
+            #     s = original_s
             for _ in range(students * 5):
                 n1, n2 = floor(random.randrange(students)), floor(random.randrange(students))
-                if random.random() < 1 * countdown / 100:
+                if random.random() < 1 * countdown / 150:
                     maybe_add(n1, countdown)
                 elif n1 < students and n2 < students and D[n1] != D[n2]:
                     maybe_swap(n1, n2, countdown)
@@ -152,6 +152,8 @@ def solve(G, s, output_file=''):
         print("Nice! Original: ", old_happiness, "New: ", new_happiness)
         return output, rooms
     else:
+        print("Sad. Original: ", old_happiness, "New: ", new_happiness)
+        print()
         return None
 
 
@@ -176,8 +178,8 @@ def solve(G, s, output_file=''):
 
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
 if __name__ == '__main__':
-    inputs = glob.glob('smalls/smol1/*')
-    inputs = sorted(inputs)
+    inputs = glob.glob('mediums/m4/*')
+    inputs = inputs[::-1]
     for input_path in inputs:
         output_path = 'test_outputs/' + basename(normpath(input_path))[:-3] + '.out'
         # if not os.path.exists(output_path):
