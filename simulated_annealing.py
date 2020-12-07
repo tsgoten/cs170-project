@@ -25,7 +25,15 @@ def solve(G, s, output_file=''):
 
     def get_D(rooms):
         D = {}
-        # D = read_output_file(output_file, G, s)
+        D = read_output_file(output_file, G, s)
+        room_to_student = {}
+        for k, v in D.items():
+            room_to_student.setdefault(v, []).append(k)
+        rooms = len(room_to_student)
+        if rooms < 1:
+            return D, rooms
+        D = {}
+
         # # RANDOM ASSIGNMENT #
         for n in range(students):
             D[n] = random.randrange(rooms)
@@ -64,25 +72,24 @@ def solve(G, s, output_file=''):
             p = math.exp((swap_hap - curr_hap) / T)
             # print(n1, n2, swap_hap, curr_hap, r, p)
             if r < p:
-                print(p)
+                # print(p)
                 # print('SWAPPED!')
                 # print(room_to_student)
                 swap(n1, n2)
         
-        countdown = 1000
-        for countdown in range(200, 0, -1):
+        for countdown in range(100, 0, -1):
             for _ in range(students):
                 n1, n2 = floor(random.randrange(students)), floor(random.randrange(students))
                 if D[n1] != D[n2]:
-                    maybe_swap(n1, n2, countdown)
+                    maybe_swap(n1, n2, countdown / 2)
             print(get_happiness())
         return D, rooms
 
     # assns =  [(get_D(rooms), rooms) for rooms in range(1, floor(students))]
     # output, rooms = max(assns, key=lambda d: calculate_happiness(d[0], G))
     # print(calculate_happiness(output, G)) 
-    output, rooms = get_D(2) # <-----------------------------------------------------CHANGE THIS FOR THE ROOMS YOU WANT
-    print(calculate_happiness(output, G))
+    output, rooms = get_D(1) # <-----------------------------------------------------CHANGE THIS FOR THE ROOMS YOU WANT
+    # print(calculate_happiness(output, G))
     if calculate_happiness(output, G) > old_happiness and is_valid_solution(output, G,s, rooms):
         return output, rooms
     else:
@@ -94,29 +101,30 @@ def solve(G, s, output_file=''):
 
 # Usage: python3 solver.py test.in
 
-if __name__ == '__main__':
-    assert len(sys.argv) == 2
-    path = sys.argv[1]
-    output_path = 'outputs/' + basename(normpath(path))[:-3] + '.out'
-    G, s = read_input_file(path)
-    sol = solve(G, s, output_path)
-    if sol:
-        D, k = sol
-        assert is_valid_solution(D, G, s, k)
-        print("Total Happiness: {}".format(calculate_happiness(D, G)), k)
-        write_output_file(D, 'out/' + output_path)
+# if __name__ == '__main__':
+#     assert len(sys.argv) == 2
+#     path = sys.argv[1]
+#     output_path = 'outputs/' + basename(normpath(path))[:-3] + '.out'
+#     G, s = read_input_file(path)
+#     sol = solve(G, s, output_path)
+#     if sol:
+#         D, k = sol
+#         assert is_valid_solution(D, G, s, k)
+#         print("Total Happiness: {}".format(calculate_happiness(D, G)), k)
+#         write_output_file(D, 'out/' + output_path)
 
 
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
-# if __name__ == '__main__':
-#     inputs = glob.glob('inputs/*')
-#     for input_path in inputs:
-#         output_path = 'outputs/' + basename(normpath(input_path))[:-3] + '.out'
-#         # if not os.path.exists(output_path):
-#         G, s = read_input_file(input_path, 100)
-#         sol = solve(G, s, output_path)
-#         if sol:
-#             D, k = sol
-#             assert is_valid_solution(D, G, s, k)
-#             cost_t = calculate_happiness(D, G)
-#             write_output_file(D, output_path)
+if __name__ == '__main__':
+    inputs = glob.glob('mediums/*')
+    for input_path in inputs:
+        output_path = 'outputs/' + basename(normpath(input_path))[:-3] + '.out'
+        # if not os.path.exists(output_path):
+        G, s = read_input_file(input_path, 100)
+        print("Solving: ", input_path)
+        sol = solve(G, s, output_path)
+        if sol:
+            D, k = sol
+            assert is_valid_solution(D, G, s, k)
+            cost_t = calculate_happiness(D, G)
+            write_output_file(D, output_path)
