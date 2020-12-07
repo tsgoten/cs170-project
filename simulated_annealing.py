@@ -64,11 +64,12 @@ def solve(G, s, output_file=''):
             p = math.exp((swap_hap - curr_hap) / T)
             # print(n1, n2, swap_hap, curr_hap, r, p)
             if r < p:
+                print(p)
                 # print('SWAPPED!')
                 # print(room_to_student)
                 swap(n1, n2)
         
-        countdown = 200
+        countdown = 1000
         for countdown in range(200, 0, -1):
             for _ in range(students):
                 n1, n2 = floor(random.randrange(students)), floor(random.randrange(students))
@@ -80,7 +81,7 @@ def solve(G, s, output_file=''):
     # assns =  [(get_D(rooms), rooms) for rooms in range(1, floor(students))]
     # output, rooms = max(assns, key=lambda d: calculate_happiness(d[0], G))
     # print(calculate_happiness(output, G)) 
-    output, rooms = get_D(3) # <-----------------------------------------------------CHANGE THIS FOR THE ROOMS YOU WANT
+    output, rooms = get_D(2) # <-----------------------------------------------------CHANGE THIS FOR THE ROOMS YOU WANT
     print(calculate_happiness(output, G))
     if calculate_happiness(output, G) > old_happiness and is_valid_solution(output, G,s, rooms):
         return output, rooms
