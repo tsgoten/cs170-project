@@ -34,6 +34,12 @@ def solve(G, s, output_file=''):
         for k, v in D.items():
             room_to_student.setdefault(v, []).append(k)
 
+        def get_room_happiness(arr):
+            if calculate_stress_for_room(arr, G) > s / len(room_to_student):
+                return -100
+            else:
+                return calculate_happiness_for_room(arr, G)
+
         def get_happiness():
             if not is_valid_solution(D, G, s, len(room_to_student)):
                 return -100
@@ -51,9 +57,9 @@ def solve(G, s, output_file=''):
             r1 = room_to_student[D[n1]]
             old_room = D[n1]
             D[n1] = room
-            i1 = r1.index(n1)
-            r1.remove(i1)
-            if i1 == 0:
+            # i1 = r1.index(n1)
+            r1.remove(n1)
+            if not r1:
                 room_to_student.pop(old_room)
                 D[n1] = room
                 index = 0
@@ -61,23 +67,31 @@ def solve(G, s, output_file=''):
                 for r in room_to_student.keys():
                     temp[index] = room_to_student[r]
                     index += 1
-                {room_to_student[k] : v for k, v in temp.items()}
-                {D[k] : v for k, v in convert_dictionary(room_to_student)}
+                for k, v in temp.items():
+                    room_to_student[k] = v
+                for k, v in convert_dictionary(room_to_student).items():
+                    D[k] = v
             room_to_student[D[n1]].append(n1)
         
         def add_happiness(n1, room):
-            if len(room_to_student[D[n1]]) == 1:
-                add_student(n1, room)
-                happiness = get_happiness()
-                remove(n1)
-                new_room = len(room_to_student) - 1
+            old_room = room_to_student[D[n1]][:].remove(n1)
+            new_room = room_to_student[room][:].append(n1)
+            happiness_old = get_room_happiness(old_room)
+            happiness_new = get_room_happiness(new_room)
+            # if len(room_to_student[D[n1]]) == 1:
+            #     happiness = get_room_happiness()
+            #     remove(n1)
+            #     new_room = len(room_to_student) - 1
+            # else:
+            #     old_room = D[n1]
+            #     add_student(n1, room)
+            #     happiness = get_happiness()
+            #     add_student(n1, old_room)
+            #     new_room = room
+            if happiness_new > 0:
+                return happiness_new + happiness_old
             else:
-                old_room = D[n1]
-                add_student(n1, room)
-                happiness = get_happiness()
-                add_student(n1, old_room)
-                new_room = room
-            return happiness, new_room
+                return happiness_new
 
         def swap(n1, n2):
             r1, r2 = room_to_student[D[n1]], room_to_student[D[n2]]
@@ -88,8 +102,10 @@ def solve(G, s, output_file=''):
         def remove(n1):
             r1 = room_to_student[D[n1]]
             if len(r1) > 1:
-                i1 = r1.index(n1)
-                r1.remove(i1)
+                # i1 = r1.index(n1)
+                print(r1)
+                r1.remove(n1)
+                print(r1)
                 D[n1] = len(room_to_student)
                 room_to_student[D[n1]] = [n1]
 
@@ -105,40 +121,47 @@ def solve(G, s, output_file=''):
                 swap(n1, n2)
 
         def maybe_add(n1, T):
-            room = random.randrange(len(room_to_student))
-            curr_hap = get_happiness() * normalizer
-            add_hap, room = add_happiness(n1, room) * normalizer
+            # room = random.randrange(len(room_to_student))
+            # curr_hap = get_happiness() * normalizer
+            # add_hap= add_happiness(n1, room) * normalizer
             r = random.random()
-            p = 0.05
             # p = math.exp((add_hap - curr_hap) / T)
+            p = 0.05
+            # print(n1, n2, add_hap, curr_hap, r, p)
             if r < p:
-                add_student(n1, room)
+                print('added')
+                # add_student(n1, room)
         
         def maybe_remove(n1, T):
-            curr_hap = get_happiness() * normalizer
-            swap_hap = swap_happiness(n1, n2) * normalizer
             r = random.random()
-            p = math.exp((swap_hap - curr_hap) / T)
+            p = 0.01
+            # p = math.exp((swap_hap - curr_hap) / T)
             # print(n1, n2, swap_hap, curr_hap, r, p)
             if r < p:
                 # print(p)
-                # print('SWAPPED!')
+                print('going to remove...', n1, is_valid_solution(D, G, s, len(room_to_student)))
+                print(D)
                 remove(n1)
+                print('removed...', is_valid_solution(D, G, s, len(room_to_student)))
+                print(D)
         
         for countdown in range(100, 0, -1):
             curr = get_happiness()
             print(curr)
             for _ in range(200):
-                n1, n2 = floor(random.randrange(students * 1.5)), floor(random.randrange(students * 1.5))
+                n1, n2 = floor(random.randrange(students * 1.2)), floor(random.randrange(students * 1.2))
                 if n2 > students and n1 < students:
                     # Move student into random breakout room that exists
+                    # print('adding')
                     maybe_add(n1, countdown)
                 elif n2 < students and n1 > students:
                     # Move student into breakout room by itself
                     maybe_remove(n2, countdown)
-                elif D[n1] != D[n2]:
+                    # print('removing')
+                elif n1 < students and n2 < students and D[n1] != D[n2]:
                     maybe_swap(n1, n2, countdown)
-        return D, rooms
+                    # print('swapping')
+        return D, len(room_to_student)
 
 
     output, rooms = get_D()
@@ -153,31 +176,31 @@ def solve(G, s, output_file=''):
 
 # Usage: python3 solver.py test.in
 
-# if __name__ == '__main__':
-#     assert len(sys.argv) == 2
-#     path = sys.argv[1]
-#     output_path = 'outputs/' + basename(normpath(path))[:-3] + '.out'
-#     G, s = read_input_file(path)
-#     sol = solve(G, s, output_path)
-#     if sol:
-#         D, k = sol
-#         assert is_valid_solution(D, G, s, k)
-#         print("Total Happiness: {}".format(calculate_happiness(D, G)), k)
-#         write_output_file(D, 'out/' + output_path)
+if __name__ == '__main__':
+    assert len(sys.argv) == 2
+    path = sys.argv[1]
+    output_path = 'outputs/' + basename(normpath(path))[:-3] + '.out'
+    G, s = read_input_file(path)
+    sol = solve(G, s, output_path)
+    if sol:
+        D, k = sol
+        assert is_valid_solution(D, G, s, k)
+        print("Total Happiness: {}".format(calculate_happiness(D, G)), k)
+        write_output_file(D, 'out/' + output_path)
 
 
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
-if __name__ == '__main__':
-    inputs = glob.glob('larges/*')
-    inputs = sorted(inputs)
-    for input_path in inputs:
-        output_path = 'test_outputs/' + basename(normpath(input_path))[:-3] + '.out'
-        # if not os.path.exists(output_path):
-        G, s = read_input_file(input_path, 100)
-        print("Solving: ", input_path)
-        sol = solve(G, s, output_path)
-        if sol:
-            D, k = sol
-            assert is_valid_solution(D, G, s, k)
-            cost_t = calculate_happiness(D, G)
-            write_output_file(D, output_path)
+# if __name__ == '__main__':
+#     inputs = glob.glob('larges/*')
+#     inputs = sorted(inputs)
+#     for input_path in inputs:
+#         output_path = 'test_outputs/' + basename(normpath(input_path))[:-3] + '.out'
+#         # if not os.path.exists(output_path):
+#         G, s = read_input_file(input_path, 100)
+#         print("Solving: ", input_path)
+#         sol = solve(G, s, output_path)
+#         if sol:
+#             D, k = sol
+#             assert is_valid_solution(D, G, s, k)
+#             cost_t = calculate_happiness(D, G)
+#             write_output_file(D, output_path)
