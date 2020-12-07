@@ -135,9 +135,9 @@ def solve(G, s, output_file=''):
             #     s -= s/50
             # else:
             #     s = original_s
-            for _ in range(students * 5):
+            for _ in range(students * 4):
                 n1, n2 = floor(random.randrange(students)), floor(random.randrange(students))
-                if random.random() < 1 * countdown / 150:
+                if random.random() < 1 * countdown / 100:
                     maybe_add(n1, countdown)
                 elif n1 < students and n2 < students and D[n1] != D[n2]:
                     maybe_swap(n1, n2, countdown)
@@ -178,7 +178,7 @@ def solve(G, s, output_file=''):
 
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
 if __name__ == '__main__':
-    inputs = glob.glob('mediums/m4/*')
+    inputs = glob.glob('larges/*')
     inputs = inputs[::-1]
     for input_path in inputs:
         output_path = 'test_outputs/' + basename(normpath(input_path))[:-3] + '.out'
