@@ -69,7 +69,7 @@ def solve(G, s, output_file=''):
                 # print(room_to_student)
                 swap(n1, n2)
         
-        countdown = 1000
+        
         for countdown in range(200, 0, -1):
             for _ in range(students):
                 n1, n2 = floor(random.randrange(students)), floor(random.randrange(students))
@@ -81,12 +81,30 @@ def solve(G, s, output_file=''):
     # assns =  [(get_D(rooms), rooms) for rooms in range(1, floor(students))]
     # output, rooms = max(assns, key=lambda d: calculate_happiness(d[0], G))
     # print(calculate_happiness(output, G)) 
-    output, rooms = get_D(2) # <-----------------------------------------------------CHANGE THIS FOR THE ROOMS YOU WANT
-    print(calculate_happiness(output, G))
-    if calculate_happiness(output, G) > old_happiness and is_valid_solution(output, G,s, rooms):
-        return output, rooms
-    else:
-        return None
+
+
+    # Find out how many breakout rooms were used in our old solution
+    # loop i from 1 -> n, get_D(i), return max
+    print(old_D)
+    print(len(old_D))
+    max_room = 0
+    for i in range(1, len(old_D)):
+        if old_D[i] > max_room:
+            max_room = old_D[i]
+    max_room += 1
+    print(max_room)
+
+    best_output = {}
+    best_rooms = 1
+    for i in range(1, max_room):
+        print("The number of rooms being checked has increased to " + str(i))
+        output, rooms = get_D(i) # <-----------------------------------------------------CHANGE THIS FOR THE ROOMS YOU WANT
+        print(calculate_happiness(output, G))
+        if calculate_happiness(output, G) > old_happiness and is_valid_solution(output, G,s, rooms):
+            best_output = output
+            best_rooms = rooms
+    
+    return best_output, best_rooms
 
 
 
