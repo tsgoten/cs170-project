@@ -64,7 +64,7 @@ def solve(G, s, output_file=''):
             p = math.exp((swap_hap - curr_hap) / T)
             # print(n1, n2, swap_hap, curr_hap, r, p)
             if r < p:
-                print(p)
+                # print(p)
                 # print('SWAPPED!')
                 # print(room_to_student)
                 swap(n1, n2)
@@ -75,7 +75,7 @@ def solve(G, s, output_file=''):
                 n1, n2 = floor(random.randrange(students)), floor(random.randrange(students))
                 if D[n1] != D[n2]:
                     maybe_swap(n1, n2, countdown)
-            print(get_happiness())
+            # print(get_happiness())
         return D, rooms
 
     # assns =  [(get_D(rooms), rooms) for rooms in range(1, floor(students))]
@@ -87,7 +87,7 @@ def solve(G, s, output_file=''):
     # loop i from 1 -> n, get_D(i), return max
     print(old_D)
     print(len(old_D))
-    max_room = 0
+    max_room = 1
     for i in range(1, len(old_D)):
         if old_D[i] > max_room:
             max_room = old_D[i]
@@ -96,14 +96,19 @@ def solve(G, s, output_file=''):
 
     best_output = {}
     best_rooms = 1
-    for i in range(1, max_room):
+    for i in range(1, 21):
         print("The number of rooms being checked has increased to " + str(i))
         output, rooms = get_D(i) # <-----------------------------------------------------CHANGE THIS FOR THE ROOMS YOU WANT
+        # print(calculate_happiness(output, G))
+        print(output)
+        print(is_valid_solution(output, G,s, rooms))
         print(calculate_happiness(output, G))
         if calculate_happiness(output, G) > old_happiness and is_valid_solution(output, G,s, rooms):
+            print(output)
             best_output = output
             best_rooms = rooms
-    
+    print(best_output)
+    print(calculate_happiness(best_output, G))
     return best_output, best_rooms
 
 
