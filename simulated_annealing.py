@@ -22,7 +22,9 @@ def solve(G, s, output_file=''):
     # DEFAULT ASSIGNMENT #
     old_D = read_output_file(output_file, G, s)
     old_happiness = calculate_happiness(old_D, G)
-    normalizer = 10000 / old_happiness
+    if old_happiness == 0:
+        return
+    normalizer = 10000 / (old_happiness + 1)
     print(old_happiness)
     def get_D(rooms):
         D = {}
@@ -81,13 +83,20 @@ def solve(G, s, output_file=''):
                 # print('SWAPPED!')
                 # print(room_to_student)
                 swap(n1, n2)
-        
+        prev, curr = 0, 0
+        converged = 0
         for countdown in range(100, 0, -1):
-            print(get_happiness())
+            curr = get_happiness()
+            print(curr)
             for _ in range(200):
                 n1, n2 = floor(random.randrange(students)), floor(random.randrange(students))
                 if D[n1] != D[n2]:
                     maybe_swap(n1, n2, countdown)
+            if prev == curr:
+                converged += 1
+            prev = curr
+            if converged >= 4:
+                break
         return D, rooms
 
     # assns =  [(get_D(rooms), rooms) for rooms in range(1, floor(students))]
@@ -122,7 +131,7 @@ def solve(G, s, output_file=''):
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
 if __name__ == '__main__':
     inputs = glob.glob('larges/*')
-    inputs = sorted(inputs)[::-1]
+    inputs = sorted(inputs)
     for input_path in inputs:
         output_path = 'outputs/' + basename(normpath(input_path))[:-3] + '.out'
         # if not os.path.exists(output_path):
