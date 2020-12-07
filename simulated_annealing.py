@@ -24,7 +24,6 @@ def solve(G, s, output_file=''):
     old_happiness = calculate_happiness(old_D, G)
     if old_happiness == 0:
         return
-    print(old_happiness)
 
     def get_D():
         new_high, best_D, best_k = 0, None, 100
@@ -123,12 +122,12 @@ def solve(G, s, output_file=''):
                 add_student(n1, room)
             elif add_hap > 0 and r < math.exp(-delta/T):
                 add_student(n1, room)
-        print('Original Stress: ', s, ' Original Happiness: ', old_happiness)
+        print('---Original Stress: ', s, ' Original Happiness: ', old_happiness)
         # original_s = s
         # s = 2 * s
         for countdown in range(100, 0, -1):
             curr, curr_rooms = get_happiness(), len(room_to_student)
-            print(curr, 'Stress: ', s, 'Rooms: ', curr_rooms)
+            # print(curr, 'Stress: ', s, 'Rooms: ', curr_rooms)
             if curr > new_high:                    
                 new_high, best_D, best_k = curr, D.copy(), curr
             # if s > original_s:
@@ -152,7 +151,7 @@ def solve(G, s, output_file=''):
         print("Nice! Original: ", old_happiness, "New: ", new_happiness)
         return output, rooms
     else:
-        print("Sad. Original: ", old_happiness, "New: ", new_happiness)
+        print("sadness :( Original: ", old_happiness, "New: ", new_happiness)
         print()
         return None
 
@@ -178,7 +177,7 @@ def solve(G, s, output_file=''):
 
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
 if __name__ == '__main__':
-    inputs = glob.glob('larges/l1/*')
+    inputs = glob.glob('larges/l6/*')
     # inputs = inputs[::-1]
     for input_path in inputs:
         output_path = 'outputs/' + basename(normpath(input_path))[:-3] + '.out'
