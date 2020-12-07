@@ -27,7 +27,7 @@ def solve(G, s, output_file=''):
     print(old_happiness)
 
     def get_D():
-        # new_high, best_D, best_k = 0, None, 100
+        new_high, best_D, best_k = 0, None, 100
         D = {}
         nonlocal s
         D = read_output_file(output_file, G, s)
@@ -128,9 +128,9 @@ def solve(G, s, output_file=''):
         s = 2 * s
         for countdown in range(100, 0, -1):
             curr, curr_rooms = get_happiness(), len(room_to_student)
-            print(curr, 'Stress: ', s, 'Rooms: ', curr_rooms)
-            # if curr > new_high:                    
-            #     new_high, best_D, best_k = curr, D.copy(), len
+            # print(curr, 'Stress: ', s, 'Rooms: ', curr_rooms)
+            if curr > new_high:                    
+                new_high, best_D, best_k = curr, D.copy(), curr
             if s > original_s:
                 s -= s/50
             else:
@@ -141,8 +141,10 @@ def solve(G, s, output_file=''):
                     maybe_add(n1, countdown)
                 elif n1 < students and n2 < students and D[n1] != D[n2]:
                     maybe_swap(n1, n2, countdown)
-        return D, len(room_to_student)
 
+        if is_valid_solution(D, G, s, best_k):
+            return best_D, best_k
+        return D, len(room_to_student)
 
     output, rooms = get_D()
     new_happiness = calculate_happiness(output, G)
@@ -174,7 +176,7 @@ def solve(G, s, output_file=''):
 
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
 if __name__ == '__main__':
-    inputs = glob.glob('larges/*')
+    inputs = glob.glob('smalls/smol1/*')
     inputs = sorted(inputs)
     for input_path in inputs:
         output_path = 'test_outputs/' + basename(normpath(input_path))[:-3] + '.out'
