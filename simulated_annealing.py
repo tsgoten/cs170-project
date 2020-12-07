@@ -52,15 +52,16 @@ def solve(G, s, output_file=''):
             i1 = r1.index(n1)
             r1.remove(i1)
             if i1 == 0:
-                room_to_student[D[n1]].pop()
+                room_to_student.pop(D[n1])
+                index = 0
+                temp = {}
+                for r in room_to_student.keys():
+                    temp[index] = room_to_student[r]
+                    index += 1
+                {room_to_student[k] : v for k, v in temp.items()}
             D[n1] = len(room_to_student)
             room_to_student[D[n1]] = [n1]
 
-            index = 0
-            output = {}
-            for r in room_to_student.keys():
-                output[index] = room_to_student[r]
-                index += 1
 
         def swap(n1, n2):
             r1, r2 = room_to_student[D[n1]], room_to_student[D[n2]]
