@@ -28,6 +28,7 @@ def solve(G, s, output_file=''):
 
     def get_D():
         D = {}
+        nonlocal s
         D = read_output_file(output_file, G, s)
         room_to_student = {}
         for k, v in D.items():
@@ -56,10 +57,8 @@ def solve(G, s, output_file=''):
             r1 = room_to_student[D[n1]]
             old_room = D[n1]
             D[n1] = room
-            # i1 = r1.index(n1)
             r1.remove(n1)
             if not r1:
-                print('ran', room_to_student)
                 room_to_student.pop(old_room)
                 index = 0
                 temp = {}
@@ -72,7 +71,6 @@ def solve(G, s, output_file=''):
                 D.clear()
                 for k, v in convert_dictionary(room_to_student).items():
                     D[k] = v
-                print('after', room_to_student)
         
         def add_happiness(n1, room):
             old_room = room_to_student[D[n1]][:]
@@ -81,16 +79,6 @@ def solve(G, s, output_file=''):
             new_room.append(n1)
             happiness_old = get_room_happiness(old_room)
             happiness_new = get_room_happiness(new_room)
-            # if len(room_to_student[D[n1]]) == 1:
-            #     happiness = get_room_happiness()
-            #     remove(n1)
-            #     new_room = len(room_to_student) - 1
-            # else:
-            #     old_room = D[n1]
-            #     add_student(n1, room)
-            #     happiness = get_happiness()
-            #     add_student(n1, old_room)
-            #     new_room = room
             if happiness_new > 0:
                 return happiness_new + happiness_old
             else:
@@ -105,7 +93,6 @@ def solve(G, s, output_file=''):
         def remove(n1):
             r1 = room_to_student[D[n1]]
             if len(r1) > 1:
-                # i1 = r1.index(n1)
                 print('called@')
                 r1.remove(n1)
                 D[n1] = len(room_to_student)
@@ -114,69 +101,42 @@ def solve(G, s, output_file=''):
         def maybe_swap(n1, n2, T):
             curr_hap = get_happiness()
             swap_hap = swap_happiness(n1, n2)
-            if swap_hap < 0:
-                return
-            r = random.random()
-            p = math.exp((swap_hap - curr_hap) / T)
+            delta = curr_hap - swap_hap
             # print(n1, n2, swap_hap, curr_hap, r, p)
-            if r < p:
-                # print(p)
-                # print('SWAPPED!')
+            r = random.random()
+            if delta < 0:
                 swap(n1, n2)
+            elif swap_hap > 0 and r < math.exp(-delta/T):
+                swap(n1, n2)
+
 
         def maybe_add(n1, T):
             room = random.randrange(len(room_to_student))
             curr_hap = get_room_happiness(room_to_student[room])
             curr_hap += get_room_happiness(room_to_student[D[n1]])
-            # curr_hap *= normalizer
             add_hap= add_happiness(n1, room)
-            if add_hap < 0:
-                return
-            r = random.random()
-            p = math.exp((add_hap - curr_hap) / T) 
-            # p = 0.05
-            # print(n1, n2, add_hap - curr_hap, r, p)
-            if r < p and add_hap > 0:
-                # print('added')
-                add_student(n1, room)
-        
-        def maybe_remove(n1, T):
-            r = random.random()
-            p = 0.01
-            # p = math.exp((swap_hap - curr_hap) / T)
+            delta = curr_hap - add_hap
             # print(n1, n2, swap_hap, curr_hap, r, p)
-            if r < p:
-                # print(p)
-                print('going to remove...', n1, is_valid_solution(D, G, s, len(room_to_student)))
-                print(D)
-                remove(n1)
-                print('removed...', is_valid_solution(D, G, s, len(room_to_student)))
-                print(D)
-        prev, curr = 0, 0 
-        repeats = 0
-        for countdown in range(200, 0, -1):
-            curr = get_happiness()
-            print(curr, room_to_student)
-            for _ in range(2000):
-                n1, n2 = floor(random.randrange(students * 1.2)), floor(random.randrange(students * 1.2))
-                if n2 > students and n1 < students:
-                    # Move student into random breakout room that exists
-                    # print('adding')
+            r = random.random()
+            if delta < 0:
+                add_student(n1, room)
+            elif add_hap > 0 and r < math.exp(-delta/T):
+                add_student(n1, room)
+        print('Original Stress: ', s)
+        original_s = s
+        # s = 2 * s
+        for countdown in range(100, 0, -1):
+            print(get_happiness(), 'Stress: ', s, 'Rooms: ', len(room_to_student))
+            # if s > original_s:
+            #     s -= s/50
+            # else:
+            #     s = original_s
+            for _ in range(students * 5):
+                n1, n2 = floor(random.randrange(students)), floor(random.randrange(students))
+                if random.random() < 0.1 * countdown / 20:
                     maybe_add(n1, countdown)
-                # elif n2 < students and n1 > students:
-                #     # Move student into breakout room by itself
-                #     maybe_remove(n2, countdown)
-                    # print('removing')
                 elif n1 < students and n2 < students and D[n1] != D[n2]:
                     maybe_swap(n1, n2, countdown)
-                    # print('swapping')
-            # if curr == prev:
-            #     repeats += 1
-            # else:
-            #     repeats = 0
-            # prev = curr
-            # if repeats > 8:
-            #     break 
         return D, len(room_to_student)
 
 
