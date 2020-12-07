@@ -29,6 +29,34 @@ def is_valid_solution(D, G, s, rooms):
 
     return True
 
+def is_valid_solution_stress(D, G, s, rooms):
+    """
+    Checks whether D is a valid mapping of G, by checking every room adheres to the stress budget.
+    Args:
+        D: Dictionary mapping student to room
+        G: networkx.Graph
+        s: Stress budget
+        rooms: Number of breakout rooms
+
+    Returns:
+        bool: whether D is a valid solution
+    """
+    room_budget = s/rooms
+    # print('Budget', room_budget)
+    room_to_student = {}
+    for k, v in D.items():
+        room_to_student.setdefault(v, []).append(k)
+
+    for k, v in room_to_student.items():
+        # print('room: ', v)
+        room_stress = calculate_stress_for_room(v, G)
+        if room_stress > room_budget:
+            # print(room_stress, 'This was too much')
+            return room_stress
+        # else:
+            # print(room_stress)
+
+    return True
 
 def calculate_happiness(D, G):
     """

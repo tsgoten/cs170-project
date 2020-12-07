@@ -17,11 +17,6 @@ def solve(G, s, output_file=''):
         D: Dictionary mapping for student to breakout room r e.g. {0:2, 1:0, 2:1, 3:2}
         k: Number of breakout rooms
     """
-    def get_hap(D, G, k):
-        if not is_valid_solution(D, G, s, k):
-            return -100
-        else:
-            return calculate_happiness(D, G)
 
     students = len(G.nodes) 
     # DEFAULT ASSIGNMENT #
@@ -30,31 +25,20 @@ def solve(G, s, output_file=''):
 
     def get_D(rooms):
         D = {}
-        D = read_output_file(output_file, G, s)
-        # RANDOM ASSIGNMENT #
-        # for n in range(students):
-        #     D[n] = random.randrange(rooms)
+        # D = read_output_file(output_file, G, s)
+        # # RANDOM ASSIGNMENT #
+        for n in range(students):
+            D[n] = random.randrange(rooms)
 
         room_to_student = {}
         for k, v in D.items():
             room_to_student.setdefault(v, []).append(k)
-        S = s / len(room_to_student)
-
-        if len(room_to_student) > rooms:
-            return D
-        # Modify #
-        for n in range(len(room_to_student), rooms, 1):
-            if rooms > len(room_to_student):
-                D[n] = random.randrange(len(room_to_student), rooms)
-
-        room_to_student = {}
-        for k, v in D.items():
-            room_to_student.setdefault(v, []).append(k)
-        S = s / len(room_to_student)
-        print(get_hap(D, G, rooms), len(room_to_student))
-
+        rooms = len(room_to_student)
+        S = s / rooms
         def get_happiness():
+
             if not is_valid_solution(D, G, s, len(room_to_student)):
+                # return - is_valid_solution_stress(D, G, s, len(room_to_student))
                 return -100
             else:
                 return calculate_happiness(D, G)
@@ -79,21 +63,25 @@ def solve(G, s, output_file=''):
             r = random.random()
             p = math.exp((swap_hap - curr_hap) / T)
             # print(n1, n2, swap_hap, curr_hap, r, p)
-            if (r < p and swap_hap > 0) or (swap_hap > curr_hap and curr_hap < 0):
-                # print('SWAPPED!', rooms)
+            if r < p:
+                # print('SWAPPED!')
+                # print(room_to_student)
                 swap(n1, n2)
         
-        for countdown in range(400, 0, -1):
-            for _ in range(students**2):
+        countdown = 200
+        for countdown in range(200, 0, -1):
+            for _ in range(students):
                 n1, n2 = floor(random.randrange(students)), floor(random.randrange(students))
                 if D[n1] != D[n2]:
-                    maybe_swap(n1, n2, countdown * 10)
-        return D
+                    maybe_swap(n1, n2, countdown)
+            print(get_happiness())
+        return D, rooms
 
-    assns =  [(get_D(rooms), rooms) for rooms in range(1, floor(students))]
-    output, rooms = max(assns, key=lambda d: get_hap(d[0], G, d[1]))
-    print([get_hap(a, G, b) for a, b in assns])
+    # assns =  [(get_D(rooms), rooms) for rooms in range(1, floor(students))]
+    # output, rooms = max(assns, key=lambda d: calculate_happiness(d[0], G))
     # print(calculate_happiness(output, G)) 
+    output, rooms = get_D(3) # <-----------------------------------------------------CHANGE THIS FOR THE ROOMS YOU WANT
+    print(calculate_happiness(output, G))
     if calculate_happiness(output, G) > old_happiness and is_valid_solution(output, G,s, rooms):
         return output, rooms
     else:
