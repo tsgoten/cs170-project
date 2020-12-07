@@ -28,7 +28,7 @@ def solve(G, s, output_file=''):
         room_to_student.append([node])
         student_to_room[node] = node
     
-    moves_size_start = {10:50, 20:100, 50:1500}
+    moves_size_start = {10:50, 20:200, 50:1500}
     moves_size_mid = {10:75, 20:200, 50:2500}
     moves_size_end = {10:50, 20:100, 50:1500}
     final_temp = 0
@@ -36,16 +36,13 @@ def solve(G, s, output_file=''):
 
     def get_happiness():
         if not is_valid_solution(student_to_room, G, s, len(room_to_student)):
-            return -100
+            return -200
         else:
             return calculate_happiness(student_to_room, G)
 
     def check_swap_student(student1, student2):
-        print(str(student1) + " swapped with " + str(student2))
-        print(student_to_room)
-        print(room_to_student)
         if student_to_room[student1] == student_to_room[student2]:
-            return -100
+            return -200
         student1_oldroom = student_to_room[student1]
         student2_oldroom = student_to_room[student2]
 
@@ -69,11 +66,8 @@ def solve(G, s, output_file=''):
     def check_add_student(student1, new_room):
         removed = False
         if student_to_room[student1] == new_room:
-            return -100
+            return -200
         student1_oldroom = student_to_room[student1]
-        print(student_to_room)
-        print(room_to_student)
-        print("add checked: " + str(student1) + " went from " + str(student1_oldroom) + " to " + str(new_room))
         room_to_student[student1_oldroom].remove(student1)
         room_to_student[new_room].append(student1)
         student_to_room[student1] = new_room
@@ -115,7 +109,6 @@ def solve(G, s, output_file=''):
         room_to_student[student1_oldroom].append(student1)
         student_to_room[student1] = student1_oldroom
 
-        print("r3m0v3 ch3kk3d")
         return happiness
 
     def swap_student(student1, student2):
@@ -128,7 +121,7 @@ def solve(G, s, output_file=''):
         room_to_student[student1_oldroom].append(student2)
         student_to_room[student1] = student2_oldroom
         student_to_room[student2] = student1_oldroom
-        
+        print("swapped")
     def add_student(student1, new_room):
         student1_oldroom = student_to_room[student1]
         room_to_student[student1_oldroom].remove(student1)
@@ -153,37 +146,38 @@ def solve(G, s, output_file=''):
         room_to_student[student1_oldroom].remove(student1)
         room_to_student.append([student1])
         student_to_room[student1] = len(room_to_student) - 1
-    
+        print("removed")
     # 95% add, 5% swap -> 1500
     curr_temp = moves_size_start[len(student_to_room)]
     alpha = 0.01
     while curr_temp > final_temp:
+        chance_add = 0.95
+        chance_swap = 0.05
         choice = random.uniform(0, 1)
         student1 = random.randint(0, len(student_to_room) - 1)
         student2 = random.randint(0, len(student_to_room) - 1)
         while student1 == student2:
             student2 = random.randint(0, len(student_to_room) - 1)
         room = random.randint(0, len(room_to_student) - 1)
-        if choice < 0.95:
+        if choice < chance_add:
             new_happiness = check_add_student(student1, room)
         else:
             new_happiness = check_swap_student(student1, student2)
 
         ratio = (new_happiness - curr_happiness) / (curr_happiness + 1)
         if new_happiness > curr_happiness:
-            if choice < 0.95:
+            if choice < chance_add:
                 add_student(student1, room)
             else:
                 swap_student(student1, student2)
             curr_happiness = new_happiness
 
-        elif random.uniform(0, 1) < math.exp((30 + ratio) * (300 / curr_temp)) and new_happiness != -100:
-            if choice < 0.95:
+        elif random.uniform(0, 3) < math.exp((new_happiness - curr_happiness)/curr_temp) and new_happiness != -100:
+            if choice < chance_add:
                 add_student(student1, room)
             else:
                 swap_student(student1, student2)
             curr_happiness = new_happiness
-        
         curr_temp = curr_temp - alpha
 
 
@@ -192,79 +186,101 @@ def solve(G, s, output_file=''):
     # 39% swap, 60% add, 1% remove -> 2500
     curr_temp = moves_size_mid[len(student_to_room)]
     while curr_temp > final_temp:
+        chance_add = 0.6
+        chance_swap = 0.3
+        chance_remove = 0.1
         choice = random.uniform(0, 1)
         student1 = random.randint(0, len(student_to_room) - 1)
         student2 = random.randint(0, len(student_to_room) - 1)
         while student1 == student2:
             student2 = random.randint(0, len(student_to_room) - 1)
         room = random.randint(0, len(room_to_student) - 1)
-        if choice < 0.39:
+        if choice < chance_swap:
             new_happiness = check_swap_student(student1, student2)
-        elif choice >= 0.39 and choice < 0.99:
+        elif choice >= chance_swap and choice < chance_swap + chance_add:
             new_happiness = check_add_student(student1, room)
         else:
             new_happiness = check_remove_student(student1)
         
         ratio = (new_happiness - curr_happiness) / (curr_happiness + 1)
         if new_happiness > curr_happiness:
-            if choice < 0.39:
+            if choice < chance_swap:
                 swap_student(student1, student2)
-            elif choice >= 0.39 and choice < 0.99:
+            elif choice >= chance_swap and choice < chance_swap + chance_add:
                 add_student(student1, room)
             else:
                 remove_student(student1)
             curr_happiness = new_happiness
 
-        elif random.uniform(0, 1) < math.exp((30 + ratio) * (300 / curr_temp)) and new_happiness != -100:
-            if choice < 0.39:
+        elif random.uniform(0, 3) < math.exp((new_happiness - curr_happiness)/curr_temp) and new_happiness != -200:
+            if choice < chance_swap:
                 swap_student(student1, student2)
-            elif choice >= 0.39 and choice < 0.99:
+            elif choice >= chance_swap and choice < chance_swap + chance_add:
                 add_student(student1, room)
             else:
                 remove_student(student1)
             curr_happiness = new_happiness
-        
         curr_temp = curr_temp - alpha
 
     # 70% swap, 29% add, 1% remove -> 1500
     start_temp = moves_size_end[len(student_to_room)]
     curr_temp = start_temp
+    max_happiness = 0
     while curr_temp > final_temp:
+        chance_swap = 0.4
+        chance_add = 0.4
+        chance_remove = 0.2
         choice = random.uniform(0, 1)
         student1 = random.randint(0, len(student_to_room) - 1)
         student2 = random.randint(0, len(student_to_room) - 1)
         while student1 == student2:
             student2 = random.randint(0, len(student_to_room) - 1)
         room = random.randint(0, len(room_to_student) - 1)
-        if choice < 0.7:
+        if choice < chance_swap:
             new_happiness = check_swap_student(student1, student2)
-        elif choice >= 0.7 and choice < 0.99:
+        elif choice >= chance_swap and choice < chance_swap + chance_add:
             new_happiness = check_add_student(student1, room)
         else:
             new_happiness = check_remove_student(student1)
         
-        ratio = (new_happiness - curr_happiness) / (curr_happiness + 1)
-        if new_happiness > curr_happiness:
-            if choice < 0.7:
-                swap_student(student1, student2)
-            elif choice >= 0.7 and choice < 0.99:
-                add_student(student1, room)
-            else:
-                remove_student(student1)
-            curr_happiness = new_happiness
+        
+        if curr_temp == 10:
+            max_happiness = curr_happiness
+            best_student = student_to_room.copy()
+            best_rooms = len(room_to_student)
+        if curr_temp < 10:
+            if new_happiness > max_happiness:
+                if choice < chance_swap:
+                    swap_student(student1, student2)
+                elif choice >= chance_swap and choice < chance_add + chance_swap:
+                    add_student(student1, room)
+                else:
+                    remove_student(student1)
+                curr_happiness = new_happiness
+                max_happiness = new_happiness
+                best_student = student_to_room.copy()
+                best_rooms = len(room_to_student)
+        else: 
+            if new_happiness > curr_happiness:
+                if choice < chance_swap:
+                    swap_student(student1, student2)
+                elif choice >= chance_swap and choice < chance_add + chance_swap:
+                    add_student(student1, room)
+                else:
+                    remove_student(student1)
+                curr_happiness = new_happiness
 
-        elif random.uniform(0, 1) < math.exp((30 + ratio) * (300 / curr_temp)) and new_happiness != -100:
-            if choice < 0.7:
-                swap_student(student1, student2)
-            elif choice >= 0.7 and choice < 0.99:
-                add_student(student1, room)
-            else:
-                remove_student(student1)
-            curr_happiness = new_happiness
-
+            elif random.uniform(0, 1) < math.exp((new_happiness - curr_happiness)/curr_temp) and new_happiness != -100:
+                if choice < chance_swap:
+                    swap_student(student1, student2)
+                elif choice >= chance_swap and choice < chance_swap + chance_add:
+                    add_student(student1, room)
+                else:
+                    remove_student(student1)
+                curr_happiness = new_happiness
         curr_temp = curr_temp - alpha
     
-    return student_to_room, len(room_to_student)
+    return best_student, best_rooms
 
 
 
