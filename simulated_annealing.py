@@ -61,6 +61,7 @@ def solve(G, s, output_file=''):
             for r in room_to_student.keys():
                 output[index] = room_to_student[r]
                 index += 1
+            
 
         def swap(n1, n2):
             r1, r2 = room_to_student[D[n1]], room_to_student[D[n2]]
