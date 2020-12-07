@@ -125,12 +125,12 @@ def solve(G, s, output_file=''):
                 add_student(n1, room)
         print('---Original Stress: ', s, ' Original Happiness: ', old_happiness)
         original_s = s
-        s = 2 * s
-        for countdown in range(400, 0, -1):
+        s = 3 * s
+        for countdown in range(500, 0, -1):
             curr, curr_rooms = get_happiness(), len(room_to_student)
             print(curr, 'Stress: ', s, 'Rooms: ', curr_rooms)
             if s > original_s:
-                s -= s/100
+                s -= s/150
             if s < original_s:
                 s = original_s
                 if curr > new_high and is_valid_solution(D, G, s, curr):                    
@@ -140,7 +140,7 @@ def solve(G, s, output_file=''):
                 n1, n2 = floor(random.randrange(students)), floor(random.randrange(students))
                 if random.random() < 1 * countdown**2 / 600:
                     maybe_add(n1, countdown)
-                elif random.random() < (countdown) / 12000:
+                elif random.random() < (countdown) / 10000 or curr < 0:
                     remove(n1)
                 elif n1 < students and n2 < students and D[n1] != D[n2]:
                     maybe_swap(n1, n2, countdown)
@@ -165,32 +165,32 @@ def solve(G, s, output_file=''):
 
 # Usage: python3 solver.py test.in
 
-if __name__ == '__main__':
-    assert len(sys.argv) == 2
-    path = sys.argv[1]
-    output_path = 'outputs/' + basename(normpath(path))[:-3] + '.out'
-    G, s = read_input_file(path)
-    print('Solving: ' + path)
-    sol = solve(G, s, output_path)
-    if sol:
-        D, k = sol
-        assert is_valid_solution(D, G, s, k)
-        print("Total Happiness: {}".format(calculate_happiness(D, G)), k)
-        write_output_file(D, 'out/' + output_path)
+# if __name__ == '__main__':
+#     assert len(sys.argv) == 2
+#     path = sys.argv[1]
+#     output_path = 'outputs/' + basename(normpath(path))[:-3] + '.out'
+#     G, s = read_input_file(path)
+#     print('Solving: ' + path)
+#     sol = solve(G, s, output_path)
+#     if sol:
+#         D, k = sol
+#         assert is_valid_solution(D, G, s, k)
+#         print("Total Happiness: {}".format(calculate_happiness(D, G)), k)
+#         write_output_file(D, 'out/' + output_path)
 
 
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
-# if __name__ == '__main__':
-#     inputs = glob.glob('larges/l6/*')
-#     # inputs = inputs[::-1]
-#     for input_path in inputs:
-#         output_path = 'outputs/' + basename(normpath(input_path))[:-3] + '.out'
-#         # if not os.path.exists(output_path):
-#         G, s = read_input_file(input_path, 100)
-#         print("Solving: ", input_path)
-#         sol = solve(G, s, output_path)
-#         if sol:
-#             D, k = sol
-#             assert is_valid_solution(D, G, s, k)
-#             cost_t = calculate_happiness(D, G)
-#             write_output_file(D, output_path)
+if __name__ == '__main__':
+    inputs = glob.glob('inputs/*')
+    # inputs = inputs[::-1]
+    for input_path in inputs:
+        output_path = 'outputs/' + basename(normpath(input_path))[:-3] + '.out'
+        # if not os.path.exists(output_path):
+        G, s = read_input_file(input_path, 100)
+        print("Solving: ", input_path)
+        sol = solve(G, s, output_path)
+        if sol:
+            D, k = sol
+            assert is_valid_solution(D, G, s, k)
+            cost_t = calculate_happiness(D, G)
+            write_output_file(D, output_path)
