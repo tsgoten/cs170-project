@@ -123,12 +123,12 @@ def solve(G, s, output_file=''):
                 add_student(n1, room)
             elif add_hap > 0 and r < math.exp(-delta/T):
                 add_student(n1, room)
-        print('Original Stress: ', s)
+        print('Original Stress: ', s, ' Original Happiness: ', old_happiness)
         # original_s = s
         # s = 2 * s
         for countdown in range(100, 0, -1):
             curr, curr_rooms = get_happiness(), len(room_to_student)
-            # print(curr, 'Stress: ', s, 'Rooms: ', curr_rooms)
+            print(curr, 'Stress: ', s, 'Rooms: ', curr_rooms)
             if curr > new_high:                    
                 new_high, best_D, best_k = curr, D.copy(), curr
             # if s > original_s:
@@ -179,9 +179,9 @@ def solve(G, s, output_file=''):
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
 if __name__ == '__main__':
     inputs = glob.glob('larges/*')
-    inputs = inputs[::-1]
+    # inputs = inputs[::-1]
     for input_path in inputs:
-        output_path = 'test_outputs/' + basename(normpath(input_path))[:-3] + '.out'
+        output_path = 'outputs/' + basename(normpath(input_path))[:-3] + '.out'
         # if not os.path.exists(output_path):
         G, s = read_input_file(input_path, 100)
         print("Solving: ", input_path)
