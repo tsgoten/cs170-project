@@ -128,7 +128,7 @@ def solve(G, s, output_file=''):
         s = 2 * s
         for countdown in range(100, 0, -1):
             curr, curr_rooms = get_happiness(), len(room_to_student)
-            # print(curr, 'Stress: ', s, 'Rooms: ', curr_rooms)
+            print(curr, 'Stress: ', s, 'Rooms: ', curr_rooms)
             # if curr > new_high:                    
             #     new_high, best_D, best_k = curr, D.copy(), len
             if s > original_s:
@@ -174,10 +174,10 @@ def solve(G, s, output_file=''):
 
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
 if __name__ == '__main__':
-    inputs = glob.glob('mediums/m4/*')
+    inputs = glob.glob('larges/*')
     inputs = sorted(inputs)
     for input_path in inputs:
-        output_path = 'outputs/' + basename(normpath(input_path))[:-3] + '.out'
+        output_path = 'test_outputs/' + basename(normpath(input_path))[:-3] + '.out'
         # if not os.path.exists(output_path):
         G, s = read_input_file(input_path, 100)
         print("Solving: ", input_path)
