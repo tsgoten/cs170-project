@@ -28,9 +28,12 @@ def solve(G, s):
             # if calculate_happiness(ret_map, G) > max_happiness:
                 max_map = ret_map
                 max_happiness = calculate_happiness(ret_map, G)
+                if max_happiness == 128:
+                    return max_map
+                print(max_happiness)
         return max_map
             
-    for size in range(4, 7):
+    for size in range(7, 8):
         result = get_mapping(size, dict())
         if result:
             return result, size
@@ -43,30 +46,30 @@ def solve(G, s):
 
 # Usage: python3 solver.py test.in
 
-# if __name__ == '__main__':
-#     assert len(sys.argv) == 2
-#     path = sys.argv[1]
-#     G, s = read_input_file(path)
-#     D, k = solve(G, s)
-#     assert is_valid_solution(D, G, s, k)
-#     print("Total Happiness: {}".format(calculate_happiness(D, G)))
-#     write_output_file(D, 'out/test.out')
+if __name__ == '__main__':
+    assert len(sys.argv) == 2
+    path = sys.argv[1]
+    G, s = read_input_file(path)
+    D, k = solve(G, s)
+    assert is_valid_solution(D, G, s, k)
+    print("Total Happiness: {}".format(calculate_happiness(D, G)))
+    write_output_file(D, 'out/test.out')
 
 
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
-if __name__ == '__main__':
-    inputs = sorted(glob.glob('smalls/smol1/*'))[::-1]
-    # inputs = inputs.sort()
-    for input_path in inputs:
-        output_path = 'smalls_outputs/' + basename(normpath(input_path))[:-3] + '.out'
-        G, s = read_input_file(input_path, 100)
-        ret = solve(G, s)
-        if ret:
-            D, k = ret
-            assert is_valid_solution(D, G, s, k)
-            cost_t = calculate_happiness(D, G)
-            print(output_path, cost_t)
-            write_output_file(D, output_path)
-        else:
-            print(output_path, 'No Result Found!')
+# if __name__ == '__main__':
+#     inputs = sorted(glob.glob('smalls/smol1/*'))[::-1]
+#     # inputs = inputs.sort()
+#     for input_path in inputs:
+#         output_path = 'smalls_outputs/' + basename(normpath(input_path))[:-3] + '.out'
+#         G, s = read_input_file(input_path, 100)
+#         ret = solve(G, s)
+#         if ret:
+#             D, k = ret
+#             assert is_valid_solution(D, G, s, k)
+#             cost_t = calculate_happiness(D, G)
+#             print(output_path, cost_t)
+#             write_output_file(D, output_path)
+#         else:
+#             print(output_path, 'No Result Found!')
 
