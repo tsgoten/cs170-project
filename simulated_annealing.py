@@ -99,6 +99,27 @@ def solve(G, s, output_file=''):
                 break
         return D, rooms
 
+    max_rooms = 0
+    for i in range(1, len(old_D)):
+        if old_D[i] > max_rooms:
+            max_rooms = old_D[i]
+    max_rooms = max_rooms + 1
+    best_output = old_D
+    best_rooms = max_rooms
+    for i in range(1, max_rooms):
+        output, rooms = get_D(i) # <-----------------------------------------------------CHANGE THIS FOR THE ROOMS YOU WANT
+        print(output)
+        print(is_valid_solution(output, G, s, rooms))
+        # print(calculate_happiness(output, G))
+        if calculate_happiness(output, G) > old_happiness and is_valid_solution(output, G,s, rooms):
+            best_output = output
+            best_rooms = rooms
+    if best_output == old_D and best_rooms == max_rooms + 1:
+        return None
+    else:
+        return best_output, best_rooms
+    
+
     # assns =  [(get_D(rooms), rooms) for rooms in range(1, floor(students))]
     # output, rooms = max(assns, key=lambda d: calculate_happiness(d[0], G))
     # print(calculate_happiness(output, G)) 
