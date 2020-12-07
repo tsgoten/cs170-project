@@ -28,10 +28,10 @@ def solve(G, s, output_file=''):
     def get_D():
         new_high, best_D, best_k = 0, None, 100
         D = {}
-        for n in range(students):
-            D[n] = n
+        # for n in range(students):
+        #     D[n] = n
         nonlocal s
-        # D = read_output_file(output_file, G, s)
+        D = read_output_file(output_file, G, s)
         room_to_student = {}
         for k, v in D.items():
             room_to_student.setdefault(v, []).append(k)
@@ -125,35 +125,37 @@ def solve(G, s, output_file=''):
                 add_student(n1, room)
         print('---Original Stress: ', s, ' Original Happiness: ', old_happiness)
         original_s = s
-        s = 3 * s
-        for countdown in range(300, 0, -1):
+        s = 2 * s
+        for countdown in range(400, 0, -1):
             curr, curr_rooms = get_happiness(), len(room_to_student)
             print(curr, 'Stress: ', s, 'Rooms: ', curr_rooms)
             if s > original_s:
-                s -= s/50
+                s -= s/100
             if s < original_s:
                 s = original_s
                 if curr > new_high and is_valid_solution(D, G, s, curr):                    
-                    new_high, best_D, best_k = curr, D.copy(), curr
+                    new_high, best_D, best_k = curr, D.copy(), curr_rooms
+
             for _ in range(students * 4):
                 n1, n2 = floor(random.randrange(students)), floor(random.randrange(students))
-                if random.random() < 1 * countdown / 300:
+                if random.random() < 1 * countdown**2 / 600:
                     maybe_add(n1, countdown)
-                elif random.random() < (countdown) / 100000:
+                elif random.random() < (countdown) / 12000:
                     remove(n1)
                 elif n1 < students and n2 < students and D[n1] != D[n2]:
                     maybe_swap(n1, n2, countdown)
-        if best_D and is_valid_solution(best_D, G, s, best_k):
-            return best_D, best_k
+        # if best_D and is_valid_solution(best_D, G, s, best_k):
+        #     return best_D, best_k
         return D, len(room_to_student)
 
     output, rooms = get_D()
     new_happiness = calculate_happiness(output, G)
-    if new_happiness > old_happiness and is_valid_solution(output, G,s, rooms):
-        print("Nice! Original: ", old_happiness, "New: ", new_happiness)
+    validity = is_valid_solution(output, G,s, rooms)
+    if new_happiness > old_happiness and validity: 
+        print("Nice! Original: ", old_happiness, "New: ", new_happiness, validity)
         return output, rooms
     else:
-        print("sadness :( Original: ", old_happiness, "New: ", new_happiness)
+        print("sadness :( Original: ", old_happiness, "New: ", new_happiness, validity)
         print()
         return None
 
