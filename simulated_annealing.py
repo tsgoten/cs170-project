@@ -174,16 +174,16 @@ def solve(G, s, output_file=''):
 
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
 if __name__ == '__main__':
-    inputs = glob.glob('mediums/*')
+    inputs = glob.glob('mediums/m4/*')
     inputs = sorted(inputs)
     for input_path in inputs:
         output_path = 'outputs/' + basename(normpath(input_path))[:-3] + '.out'
-        if not os.path.exists(output_path):
-            G, s = read_input_file(input_path, 100)
-            print("Solving: ", input_path)
-            sol = solve(G, s, output_path)
-            if sol:
-                D, k = sol
-                assert is_valid_solution(D, G, s, k)
-                cost_t = calculate_happiness(D, G)
-                write_output_file(D, output_path)
+        # if not os.path.exists(output_path):
+        G, s = read_input_file(input_path, 100)
+        print("Solving: ", input_path)
+        sol = solve(G, s, output_path)
+        if sol:
+            D, k = sol
+            assert is_valid_solution(D, G, s, k)
+            cost_t = calculate_happiness(D, G)
+            write_output_file(D, output_path)
