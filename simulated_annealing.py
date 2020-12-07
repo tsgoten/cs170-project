@@ -22,7 +22,8 @@ def solve(G, s, output_file=''):
     # DEFAULT ASSIGNMENT #
     old_D = read_output_file(output_file, G, s)
     old_happiness = calculate_happiness(old_D, G)
-
+    normalizer = 10000 / old_happiness
+    print(old_happiness)
     def get_D(rooms):
         D = {}
         D = read_output_file(output_file, G, s)
@@ -30,19 +31,23 @@ def solve(G, s, output_file=''):
         for k, v in D.items():
             room_to_student.setdefault(v, []).append(k)
         rooms = len(room_to_student)
-        if rooms < 1:
-            return D, rooms
-        D = {}
+        # for n in room_to_student[rooms - 1]:
+        #     D[n] = 0
+        # room_to_student[0] += room_to_student.pop(rooms - 1)
+        # rooms = len(room_to_student)
+        # if rooms < 1:
+        #     return D, rooms + 1
+        # D = {}
 
-        # # RANDOM ASSIGNMENT #
-        for n in range(students):
-            D[n] = random.randrange(rooms)
+        # # # RANDOM ASSIGNMENT #
+        # for n in range(students):
+        #     D[n] = random.randrange(rooms)
 
-        room_to_student = {}
-        for k, v in D.items():
-            room_to_student.setdefault(v, []).append(k)
-        rooms = len(room_to_student)
-        S = s / rooms
+        # room_to_student = {}
+        # for k, v in D.items():
+        #     room_to_student.setdefault(v, []).append(k)
+        # rooms = len(room_to_student)
+        # S = s / rooms
         def get_happiness():
 
             if not is_valid_solution(D, G, s, len(room_to_student)):
@@ -66,8 +71,8 @@ def solve(G, s, output_file=''):
             D[n2], D[n1] = D[n1], D[n2]
 
         def maybe_swap(n1, n2, T):
-            curr_hap = get_happiness()
-            swap_hap = swap_happiness(n1, n2)
+            curr_hap = get_happiness() * normalizer
+            swap_hap = swap_happiness(n1, n2) * normalizer
             r = random.random()
             p = math.exp((swap_hap - curr_hap) / T)
             # print(n1, n2, swap_hap, curr_hap, r, p)
@@ -78,11 +83,11 @@ def solve(G, s, output_file=''):
                 swap(n1, n2)
         
         for countdown in range(100, 0, -1):
-            for _ in range(students):
+            print(get_happiness())
+            for _ in range(200):
                 n1, n2 = floor(random.randrange(students)), floor(random.randrange(students))
                 if D[n1] != D[n2]:
-                    maybe_swap(n1, n2, countdown / 2)
-            print(get_happiness())
+                    maybe_swap(n1, n2, countdown)
         return D, rooms
 
     # assns =  [(get_D(rooms), rooms) for rooms in range(1, floor(students))]
@@ -116,7 +121,8 @@ def solve(G, s, output_file=''):
 
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
 if __name__ == '__main__':
-    inputs = glob.glob('mediums/*')
+    inputs = glob.glob('larges/*')
+    inputs = sorted(inputs)[::-1]
     for input_path in inputs:
         output_path = 'outputs/' + basename(normpath(input_path))[:-3] + '.out'
         # if not os.path.exists(output_path):
