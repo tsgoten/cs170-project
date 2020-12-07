@@ -158,32 +158,32 @@ def solve(G, s, output_file=''):
 
 # Usage: python3 solver.py test.in
 
-if __name__ == '__main__':
-    assert len(sys.argv) == 2
-    path = sys.argv[1]
-    output_path = 'outputs/' + basename(normpath(path))[:-3] + '.out'
-    G, s = read_input_file(path)
-    print('Solving: ' + path)
-    sol = solve(G, s, output_path)
-    if sol:
-        D, k = sol
-        assert is_valid_solution(D, G, s, k)
-        print("Total Happiness: {}".format(calculate_happiness(D, G)), k)
-        write_output_file(D, 'out/' + output_path)
+# if __name__ == '__main__':
+#     assert len(sys.argv) == 2
+#     path = sys.argv[1]
+#     output_path = 'outputs/' + basename(normpath(path))[:-3] + '.out'
+#     G, s = read_input_file(path)
+#     print('Solving: ' + path)
+#     sol = solve(G, s, output_path)
+#     if sol:
+#         D, k = sol
+#         assert is_valid_solution(D, G, s, k)
+#         print("Total Happiness: {}".format(calculate_happiness(D, G)), k)
+#         write_output_file(D, 'out/' + output_path)
 
 
 # For testing a folder of inputs to create a folder of outputs, you can use glob (need to import it)
-# if __name__ == '__main__':
-#     inputs = glob.glob('larges/*')
-#     inputs = sorted(inputs)
-#     for input_path in inputs:
-#         output_path = 'test_outputs/' + basename(normpath(input_path))[:-3] + '.out'
-#         # if not os.path.exists(output_path):
-#         G, s = read_input_file(input_path, 100)
-#         print("Solving: ", input_path)
-#         sol = solve(G, s, output_path)
-#         if sol:
-#             D, k = sol
-#             assert is_valid_solution(D, G, s, k)
-#             cost_t = calculate_happiness(D, G)
-#             write_output_file(D, output_path)
+if __name__ == '__main__':
+    inputs = glob.glob('mediums/*')
+    inputs = sorted(inputs)
+    for input_path in inputs:
+        output_path = 'outputs/' + basename(normpath(input_path))[:-3] + '.out'
+        if not os.path.exists(output_path):
+            G, s = read_input_file(input_path, 100)
+            print("Solving: ", input_path)
+            sol = solve(G, s, output_path)
+            if sol:
+                D, k = sol
+                assert is_valid_solution(D, G, s, k)
+                cost_t = calculate_happiness(D, G)
+                write_output_file(D, output_path)
