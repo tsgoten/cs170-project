@@ -28,9 +28,9 @@ def solve(G, s, output_file=''):
         room_to_student.append([node])
         student_to_room[node] = node
     
-    moves_size_start = {10:50, 20:200, 50:5000}
-    moves_size_mid = {10:75, 20:100, 50:2500}
-    moves_size_end = {10:50, 20:100, 50:1500}
+    moves_size_start = {10:50, 20:2000, 50:5000}
+    moves_size_mid = {10:75, 20:1000, 50:2500}
+    moves_size_end = {10:50, 20:1000, 50:1500}
     final_temp = 0
     curr_happiness = 1
 
@@ -213,10 +213,11 @@ def solve(G, s, output_file=''):
         
         if room1 > room2:
             room1 = room1 - 1
+        print("combined")
     
     # 95% add, 5% swap -> 1500
     curr_temp = moves_size_start[len(student_to_room)]
-    alpha = 0.005
+    alpha = 0.01
     curr_stress = 0
     stress_diff = 0
     best_rooms = 0
@@ -265,7 +266,7 @@ def solve(G, s, output_file=''):
                 best_happiness = curr_happiness
             print(curr_happiness)
 
-        elif random.uniform(0, 1) < math.exp((10*(new_happiness - curr_happiness) + stress_diff)/curr_temp) and new_happiness != -200:
+        elif random.uniform(0, 1) < math.exp((10 * (new_happiness - curr_happiness) + stress_diff)/curr_temp) and new_happiness != -200:
             if choice < chance_add:
                 add_student(student1, room)
             elif choice >= chance_add and choice < chance_add + chance_combine:
@@ -327,7 +328,7 @@ def solve(G, s, output_file=''):
                 best_happiness = curr_happiness
             print(curr_happiness)
 
-        elif random.uniform(0, 1) < math.exp((10*(new_happiness - curr_happiness) + stress_diff)/curr_temp) and new_happiness != -200:
+        elif random.uniform(0, 1) < math.exp((10 * (new_happiness - curr_happiness) + stress_diff)/curr_temp) and new_happiness != -200:
             if choice < chance_add:
                 add_student(student1, room)
             elif choice >= chance_add and choice < chance_add + chance_combine:
@@ -389,7 +390,7 @@ def solve(G, s, output_file=''):
                 best_happiness = curr_happiness
             print(curr_happiness)
 
-        elif random.uniform(0, 1) < math.exp((10*(new_happiness - curr_happiness) + stress_diff)/curr_temp) and new_happiness != -200:
+        elif random.uniform(0, 1) < math.exp((10 * (new_happiness - curr_happiness) + stress_diff)/curr_temp) and new_happiness != -200:
             if choice < chance_add:
                 add_student(student1, room)
             elif choice >= chance_add and choice < chance_add + chance_combine:
