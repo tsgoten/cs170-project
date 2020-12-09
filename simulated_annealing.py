@@ -26,16 +26,14 @@ def solve(G, s, output_file=''):
     for k, v in old_D.items():
         old_assignment.setdefault(v, []).append(k)
     old_rooms = len(old_assignment)
-    if old_happiness == 0:
-        return
 
     def get_D():
         new_high, best_D, best_k = 0, None, 100
         D = {}
-        # for n in range(students):
-        #     D[n] = n
+        for n in range(students):
+            D[n] = 0
         nonlocal s
-        D = read_output_file(output_file, G, s)
+        # D = read_output_file(output_file, G, s)
         room_to_student = {}
         for k, v in D.items():
             room_to_student.setdefault(v, []).append(k)
@@ -130,29 +128,32 @@ def solve(G, s, output_file=''):
 
         print('---Original Stress: ', s, ' Original Happiness: ', old_happiness, 'Orig. Rooms: ', old_rooms)
 
-        original_s = s
-        # s = 2 * s
+        # original_s = s
+        # s = 1.5 * s
         loops = 100
 
-        for countdown in range(loops, 0, -1):
+        for countdown in range(loops*5, loops*4, -1):
             # if s > original_s:
             #     s -= (loops - countdown + 1)**2 * s / loops
             # if s < original_s:
             #     s = original_s
             curr, curr_rooms = get_happiness(), len(room_to_student)
             print(curr, 'Stress: ', s, 'Rooms: ', curr_rooms, countdown)
-            if curr > new_high and is_valid_solution(D, G, s, curr):                    
-                new_high, best_D, best_k = curr, D.copy(), curr_rooms
+            # if curr > new_high and is_valid_solution(D, G, s, curr):                    
+            #     new_high, best_D, best_k = curr, D.copy(), curr_rooms
+            # else:
+            #     print(curr, 'Stress: ', s, 'Rooms: ', curr_rooms, countdown)
+            #     break
 
-            for _ in range(students * 4):
+            for _ in range(students * 4 ):
                 curr, curr_rooms = get_happiness(), len(room_to_student)
                 print(curr, 'Stress: ', s, 'Rooms: ', curr_rooms, countdown)
                 n1, n2 = floor(random.randrange(students)), floor(random.randrange(students))
                 # ADD CASE
-                if random.random() < countdown / (loops) and curr > -50 and countdown > loops / 5:
+                if random.random() < countdown / (loops) and countdown > loops:
                     maybe_add(n1, countdown)
                 # REMOVE CASE
-                if random.random() < 1 / countdown and curr < -50:
+                if random.random() < countdown / (loops*1000) and curr < -50:
                     remove(n1)
                 # SWAP CASE
                 if D[n1] != D[n2]:
